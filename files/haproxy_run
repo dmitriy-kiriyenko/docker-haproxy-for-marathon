@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+
+exec haproxy -f $HAPROXY_CONF -p $HAPROXY_PID

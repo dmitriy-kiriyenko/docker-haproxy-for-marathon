@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+
+haproxy_dns_cfg localhost:8080 > $HAPROXY_CONF
+haproxy -f $HAPROXY_CONF -p $HAPROXY_PID -sf $(cat $HAPROXY_PID)

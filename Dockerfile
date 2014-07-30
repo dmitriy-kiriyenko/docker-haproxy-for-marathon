@@ -32,4 +32,4 @@ ADD files/haproxy_run /usr/local/bin/haproxy_run
 ADD files/crontab /etc/crontab
 
 EXPOSE 80 9090
-CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD ["/usr/bin/supervisord"]

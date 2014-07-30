@@ -17,7 +17,7 @@ RUN locale-gen en_US.UTF-8
 ADD \
   files/haproxy_dns_cfg \
   /usr/local/bin/haproxy_dns_cfg
-RUN chmod +x /usr/local/bin/haproxy_dns_cfg
+ADD files/haproxy_start /usr/local/bin/haproxy_start
 
 EXPOSE 80 9090
-CMD ["/usr/bin/supervisord"]
+CMD ["haproxy_start"]

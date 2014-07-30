@@ -1,4 +1,4 @@
-NAME = donal/docker-haproxy-for-marathon
+NAME = donal/haproxy-for-marathon
 
 .PHONY: all build
 

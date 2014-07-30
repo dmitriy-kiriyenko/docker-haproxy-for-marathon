@@ -11,7 +11,7 @@ RUN \
 ADD files/haproxy.cfg $HAPROXY_CONF
 
 # Configure service discovery
-ENV RELOAD_TTL 5
+ENV RELOAD_TTL 60
 ENV DISCOVERY_URL localhost:8080
 RUN apt-get install -y curl
 RUN locale-gen en_US.UTF-8

@@ -1,5 +1,0 @@
-#!/bin/bash
-set -e
-
-haproxy_dns_cfg localhost:8080 > $HAPROXY_CONF
-supervisorctl restart haproxy

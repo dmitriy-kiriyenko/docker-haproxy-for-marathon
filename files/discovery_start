@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -e
+
+log() {
+  while read data
+  do
+    echo -e "$data"
+  done
+}
+
+run_command() {
+  echo "Running $1"
+  echo $(cat $HAPROXY_CONF)
+  bash -c "$1" 2>&1 | log &
+  HAPROXY_PID="$!"
+}
+
+reload_conf() {
+  haproxy_dns_cfg $DISCOVERY_URL > $HAPROXY_CONF || echo "Marathon is not available"
+  echo "Reloading conf"
+  run_command "haproxy -f $HAPROXY_CONF -sf $HAPROXY_PID"
+}
+
+
+onexit() {
+  echo Sending SIGTERM to haproxy
+  kill $HAPROXY_PID &>/dev/null
+  sleep 1
+}
+trap onexit SIGINT SIGTERM EXIT
+
+run_command "haproxy -f $HAPROXY_CONF"
+while sleep $RELOAD_TTL; do reload_conf; done

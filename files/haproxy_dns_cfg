@@ -32,6 +32,7 @@ defaults
   stats enable
   stats auth admin:admin
   stats uri /haproxy
+  monitor-uri /health
 
 EOF
 }

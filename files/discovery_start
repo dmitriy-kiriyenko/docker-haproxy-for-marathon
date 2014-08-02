@@ -2,16 +2,9 @@
 
 set -e
 
-log() {
-  while read data
-  do
-    echo -e "$data"
-  done
-}
-
 run_command() {
   echo "Running $1"
-  bash -c "$1" 2>&1 | log &
+  bash -c "$1" 2>&1 &
   HAPROXY_PID="$!"
 }
 

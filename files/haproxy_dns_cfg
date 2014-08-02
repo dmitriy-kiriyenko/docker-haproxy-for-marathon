@@ -29,34 +29,56 @@ defaults
   contimeout  5000
   clitimeout  50000
   srvtimeout  50000
-
-listen stats :9090
-  balance
-  mode http
-  stats uri /
   stats enable
   stats auth admin:admin
+  stats uri /haproxy
+
 EOF
 }
 
 function marathon_apps {
-  curl -H "Accept: text/plain" -s "$1/v2/tasks" | rules
+  z="`curl -H "Accept: text/plain" -s "$1/v2/tasks"`"
+
+  frontend "$z"
+  backend "$z"
 }
 
-function rules {
-  while read -r line
+function frontend {
+  cat <<EOF
+frontend http-in
+  bind *:80
+  mode http
+  option httplog
+  option dontlognull
+  option forwardfor
+  option http-server-close
+EOF
+
+  while IFS= read
   do
-    set -- $line
+    set -- $REPLY
+    local name="$1"
+    cat <<EOF
+  acl host_${name} hdr_beg(host) -i ${name}
+  use_backend ${name}_cluster if host_${name}
+
+EOF
+  done <<< "$1"
+}
+
+function backend {
+  while IFS= read
+  do
+    set -- $REPLY
     local name="$1"
     local port="$2"
     shift 2
     cat <<EOF
 
-listen ${name}_${port}
-  bind 127.0.0.1:$port
+backend ${name}_cluster
+  option httpclose
+  option forwardfor
   mode http
-  option tcplog
-  option httpchk GET /
   balance leastconn
 EOF
     while [[ $# -gt 0 ]]
@@ -64,7 +86,7 @@ EOF
       out "  server ${name}-$# $1 check"
       shift
     done
-  done
+  done <<< "$1"
 }
 
 function config {

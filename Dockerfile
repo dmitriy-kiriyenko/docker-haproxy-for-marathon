@@ -20,5 +20,5 @@ ADD \
   /usr/local/bin/haproxy_dns_cfg
 ADD files/discovery_start /usr/local/bin/discovery_start
 
-EXPOSE 80 9090
+EXPOSE 80
 CMD ["discovery_start"]

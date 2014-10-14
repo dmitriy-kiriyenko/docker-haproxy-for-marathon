@@ -22,4 +22,4 @@ onexit() {
 trap onexit SIGINT SIGTERM EXIT
 
 run_command "haproxy -f $HAPROXY_CONF"
-while sleep $RELOAD_TTL; do reload_conf; done
+while true; do reload_conf; sleep $RELOAD_TTL; done
